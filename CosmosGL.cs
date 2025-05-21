@@ -1,0 +1,470 @@
+using Cosmos.System.Graphics;
+using Cosmos.System;
+using System;
+using System.Drawing;
+using System.Numerics; // For Vector3 and Matrix4x4
+
+namespace Unity.Engine.CosmosGL
+{
+    public static class CosmosGL
+    {
+        public const int GL_ACCUM = 0x0100;
+        public const int GL_LOAD = 0x0101;
+        public const int GL_RETURN = 0x0102;
+        public const int GL_MULT = 0x0103;
+        public const int GL_ADD = 0x0104;
+
+        //AlphaFunction
+        public const int GL_NEVER = 0x0200;
+        public const int GL_LESS = 0x0201;
+        public const int GL_EQUAL = 0x0202;
+        public const int GL_LEQUAL = 0x0203;
+        public const int GL_GREATER = 0x0204;
+        public const int GL_NOTEQUAL = 0x0205;
+        public const int GL_GEQUAL = 0x0206;
+        public const int GL_ALWAYS = 0x0207;
+
+        //AttribMask
+        public const int GL_CURRENT_BIT = 0x00000001;
+        public const int GL_POINT_BIT = 0x00000002;
+        public const int GL_LINE_BIT = 0x00000004;
+        public const int GL_POLYGON_BIT = 0x00000008;
+        public const int GL_POLYGON_STIPPLE_BIT = 0x00000010;
+        public const int GL_PIXEL_MODE_BIT = 0x00000020;
+        public const int GL_LIGHTING_BIT = 0x00000040;
+        public const int GL_FOG_BIT = 0x00000080;
+        public const int GL_DEPTH_BUFFER_BIT = 0x00000100;
+        public const int GL_ACCUM_BUFFER_BIT = 0x00000200;
+        public const int GL_STENCIL_BUFFER_BIT = 0x00000400;
+        public const int GL_VIEWPORT_BIT = 0x00000800;
+        public const int GL_TRANSFORM_BIT = 0x00001000;
+        public const int GL_ENABLE_BIT = 0x00002000;
+        public const int GL_COLOR_BUFFER_BIT = 0x00004000;
+        public const int GL_HINT_BIT = 0x00008000;
+        public const int GL_EVAL_BIT = 0x00010000;
+        public const int GL_LIST_BIT = 0x00020000;
+        public const int GL_TEXTURE_BIT = 0x00040000;
+        public const int GL_SCISSOR_BIT = 0x00080000;
+        public const int GL_ALL_ATTRIB_BITS = 0x000FFFFF;
+
+        //BeginMode
+        public const int GL_POINTS = 0x0000;
+        public const int GL_LINES = 0x0001;
+        public const int GL_LINE_LOOP = 0x0002;
+        public const int GL_LINE_STRIP = 0x0003;
+        public const int GL_TRIANGLES = 0x0004;
+        public const int GL_TRIANGLE_STRIP = 0x0005;
+        public const int GL_TRIANGLE_FAN = 0x0006;
+        public const int GL_QUADS = 0x0007;
+        public const int GL_QUAD_STRIP = 0x0008;
+        public const int GL_POLYGON = 0x0009;
+        
+        //BlendingFactorDest
+        public const int GL_ZERO = 0;
+        public const int GL_ONE = 1;
+        public const int GL_SRC_COLOR = 0x0300;
+        public const int GL_ONE_MINUS_SRC_COLOR = 0x0301;
+        public const int GL_SRC_ALPHA = 0x0302;
+        public const int GL_ONE_MINUS_SRC_ALPHA = 0x0303;
+        public const int GL_DST_ALPHA = 0x0304;
+        public const int GL_ONE_MINUS_DST_ALPHA = 0x0305;
+        
+        //BlendingFactorSrc
+        //GL_ZERO
+         
+        //GL_ONE 
+        public const int GL_DST_COLOR = 0x0306;
+        public const int GL_ONE_MINUS_DST_COLOR = 0x0307;
+        public const int GL_SRC_ALPHA_SATURATE = 0x0308;
+        public const int GL_CONSTANT_COLOR = 0x8001;
+        public const int GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
+        public const int GL_CONSTANT_ALPHA = 0x8003;
+        public const int GL_ONE_MINUS_CONSTANT_ALPHA = 0x8004;
+        
+        //Boolean 
+        public const int GL_TRUE = 1;
+        public const int GL_FALSE = 0;
+        
+        //ClipPlaneName
+        public const int GL_CLIP_PLANE0 = 0x3000;
+        public const int GL_CLIP_PLANE1 = 0x3001;
+        public const int GL_CLIP_PLANE2 = 0x3002;
+        public const int GL_CLIP_PLANE3 = 0x3003;
+        public const int GL_CLIP_PLANE4 = 0x3004;
+        public const int GL_CLIP_PLANE5 = 0x3005;
+
+        //DataType 
+        public const int GL_BYTE = 0x1400;
+        public const int GL_UNSIGNED_BYTE = 0x1401;
+        public const int GL_SHORT = 0x1402;
+        public const int GL_UNSIGNED_SHORT = 0x1403;
+        public const int GL_INT = 0x1404;
+        public const int GL_UNSIGNED_INT = 0x1405;
+        public const int GL_FLOAT = 0x1406;
+        public const int GL_2_BYTES = 0x1407;
+        public const int GL_3_BYTES = 0x1408;
+        public const int GL_4_BYTES = 0x1409;
+        public const int GL_DOUBLE = 0x140A;
+        
+        //DrawBufferMode
+        public const int GL_NONE = 0;
+        public const int GL_FRONT_LEFT = 0x0400;
+        public const int GL_FRONT_RIGHT = 0x0401;
+        public const int GL_BACK_LEFT = 0x0402;
+        public const int GL_BACK_RIGHT = 0x0403;
+        public const int GL_FRONT = 0x0404;
+        public const int GL_BACK = 0x0405;
+        public const int GL_LEFT = 0x0406;
+        public const int GL_RIGHT = 0x0407;
+        public const int GL_FRONT_AND_BACK = 0x0408;
+        public const int GL_AUX0 = 0x0409;
+        public const int GL_AUX1 = 0x040A;
+        public const int GL_AUX2 = 0x040B;
+        public const int GL_AUX3 = 0x040C;
+        
+        //ErrorCode
+        public const int GL_NO_ERROR = 0;
+        public const int GL_INVALID_ENUM = 0x0500;
+        public const int GL_INVALID_VALUE = 0x0501;
+        public const int GL_INVALID_OPERATION = 0x0502;
+        public const int GL_STACK_OVERFLOW = 0x0503;
+        public const int GL_STACK_UNDERFLOW = 0x0504;
+        public const int GL_OUT_OF_MEMORY = 0x0505;
+        
+        //FeedBackMode
+        public const int GL_2D = 0x0600;
+        public const int GL_3D = 0x0601;
+        public const int GL_3D_COLOR = 0x0602;
+        public const int GL_3D_COLOR_TEXTURE = 0x0603;
+        public const int GL_4D_COLOR_TEXTURE = 0x0604;
+
+        //FeedBackToken
+        public const int GL_PASS_THROUGH_TOKEN = 0x0700;
+        public const int GL_POINT_TOKEN = 0x0701;
+        public const int GL_LINE_TOKEN = 0x0702;
+        public const int GL_POLYGON_TOKEN = 0x0703;
+        public const int GL_BITMAP_TOKEN = 0x0704;
+        public const int GL_DRAW_PIXEL_TOKEN = 0x0705;
+        public const int GL_COPY_PIXEL_TOKEN = 0x0706;
+        public const int GL_LINE_RESET_TOKEN = 0x0707;
+        
+        //FogMode
+        //GL_LINEAR
+        public const int GL_EXP = 0x0800;
+        public const int GL_EXP2 = 0x0801;
+        
+        //FrontFaceDirection
+        public const int GL_CW = 0x0900;
+        public const int GL_CCW = 0x0901;
+        
+        //GetMapTarget
+        public const int GL_COEFF = 0x0A00;
+        public const int GL_ORDER = 0x0A01;
+        public const int GL_DOMAIN = 0x0A02;
+        
+        //GetTarget
+        public const int GL_CURRENT_COLOR = 0x0B00;
+        public const int GL_CURRENT_INDEX = 0x0B01;
+        public const int GL_CURRENT_NORMAL = 0x0B02;
+        public const int GL_CURRENT_TEXTURE_COORDS = 0x0B03;
+        public const int GL_CURRENT_RASTER_COLOR = 0x0B04;
+        public const int GL_CURRENT_RASTER_INDEX = 0x0B05;
+        public const int GL_CURRENT_RASTER_TEXTURE_COORDS = 0x0B06;
+        public const int GL_CURRENT_RASTER_POSITION = 0x0B07;
+        public const int GL_CURRENT_RASTER_POSITION_VALID = 0x0B08;
+        public const int GL_CURRENT_RASTER_DISTANCE = 0x0B09;
+        public const int GL_POINT_SMOOTH = 0x0B10;
+        public const int GL_POINT_SIZE = 0x0B11;
+        public const int GL_POINT_SIZE_RANGE = 0x0B12;
+        public const int GL_POINT_SIZE_GRANULARITY = 0x0B13;
+        public const int GL_LINE_SMOOTH = 0x0B20;
+        public const int GL_LINE_WIDTH = 0x0B21;
+        public const int GL_LINE_WIDTH_RANGE = 0x0B22;
+        public const int GL_LINE_WIDTH_GRANULARITY = 0x0B23;
+        public const int GL_LINE_STIPPLE = 0x0B24;
+        public const int GL_LINE_STIPPLE_PATTERN = 0x0B25;
+        public const int GL_LINE_STIPPLE_REPEAT = 0x0B26;
+        public const int GL_LIST_MODE = 0x0B30;
+        public const int GL_MAX_LIST_NESTING = 0x0B31;
+        public const int GL_LIST_BASE = 0x0B32;
+        public const int GL_LIST_INDEX = 0x0B33;
+        public const int GL_POLYGON_MODE = 0x0B40;
+        public const int GL_POLYGON_SMOOTH = 0x0B41;
+        public const int GL_POLYGON_STIPPLE = 0x0B42;
+        public const int GL_EDGE_FLAG = 0x0B43;
+        public const int GL_CULL_FACE = 0x0B44;
+        public const int GL_CULL_FACE_MODE = 0x0B45;
+        public const int GL_FRONT_FACE = 0x0B46;
+        public const int GL_LIGHTING = 0x0B50;
+        public const int GL_LIGHT_MODEL_LOCAL_VIEWER = 0x0B51;
+        public const int GL_LIGHT_MODEL_TWO_SIDE = 0x0B52;
+        public const int GL_LIGHT_MODEL_AMBIENT = 0x0B53;
+        public const int GL_SHADE_MODEL = 0x0B54;
+        public const int GL_COLOR_MATERIAL_FACE = 0x0B55;
+        public const int GL_COLOR_MATERIAL_PARAMETER = 0x0B56;
+        public const int GL_COLOR_MATERIAL = 0x0B57;
+        public const int GL_FOG = 0x0B60;
+        public const int GL_FOG_INDEX = 0x0B61;
+        public const int GL_FOG_DENSITY = 0x0B62;
+        public const int GL_FOG_START = 0x0B63;
+        public const int GL_FOG_END = 0x0B64;
+        public const int GL_FOG_MODE = 0x0B65;
+        public const int GL_FOG_COLOR = 0x0B66;
+        public const int GL_DEPTH_RANGE = 0x0B70;
+        public const int GL_DEPTH_TEST = 0x0B71;
+        public const int GL_DEPTH_WRITEMASK = 0x0B72;
+        public const int GL_DEPTH_CLEAR_VALUE = 0x0B73;
+        public const int GL_DEPTH_FUNC = 0x0B74;
+        public const int GL_ACCUM_CLEAR_VALUE = 0x0B80;
+        public const int GL_STENCIL_TEST = 0x0B90;
+        public const int GL_STENCIL_CLEAR_VALUE = 0x0B91;
+        public const int GL_STENCIL_FUNC = 0x0B92;
+        public const int GL_STENCIL_VALUE_MASK = 0x0B93;
+        public const int GL_STENCIL_FAIL = 0x0B94;
+        public const int GL_STENCIL_PASS_DEPTH_FAIL = 0x0B95;
+        public const int GL_STENCIL_PASS_DEPTH_PASS = 0x0B96;
+        public const int GL_STENCIL_REF = 0x0B97;
+        public const int GL_STENCIL_WRITEMASK = 0x0B98;
+        public const int GL_MATRIX_MODE = 0x0BA0;
+        public const int GL_NORMALIZE = 0x0BA1;
+        public const int GL_VIEWPORT = 0x0BA2;
+        public const int GL_MODELVIEW_STACK_DEPTH = 0x0BA3;
+        public const int GL_PROJECTION_STACK_DEPTH = 0x0BA4;
+        public const int GL_TEXTURE_STACK_DEPTH = 0x0BA5;
+        public const int GL_MODELVIEW_MATRIX = 0x0BA6;
+        public const int GL_PROJECTION_MATRIX = 0x0BA7;
+        public const int GL_TEXTURE_MATRIX = 0x0BA8;
+        public const int GL_ATTRIB_STACK_DEPTH = 0x0BB0;
+        public const int GL_CLIENT_ATTRIB_STACK_DEPTH = 0x0BB1;
+        public const int GL_ALPHA_TEST = 0x0BC0;
+        public const int GL_ALPHA_TEST_FUNC = 0x0BC1;
+        public const int GL_ALPHA_TEST_REF = 0x0BC2;
+        public const int GL_DITHER = 0x0BD0;
+        public const int GL_BLEND_DST = 0x0BE0;
+        public const int GL_BLEND_SRC = 0x0BE1;
+        public const int GL_BLEND = 0x0BE2;
+        public const int GL_LOGIC_OP_MODE = 0x0BF0;
+        public const int GL_INDEX_LOGIC_OP = 0x0BF1;
+        public const int GL_COLOR_LOGIC_OP = 0x0BF2;
+        public const int GL_AUX_BUFFERS = 0x0C00;
+        public const int GL_DRAW_BUFFER = 0x0C01;
+        public const int GL_READ_BUFFER = 0x0C02;
+        public const int GL_SCISSOR_BOX = 0x0C10;
+        public const int GL_SCISSOR_TEST = 0x0C11;
+        public const int GL_INDEX_CLEAR_VALUE = 0x0C20;
+        public const int GL_INDEX_WRITEMASK = 0x0C21;
+        public const int GL_COLOR_CLEAR_VALUE = 0x0C22;
+        public const int GL_COLOR_WRITEMASK = 0x0C23;
+        public const int GL_INDEX_MODE = 0x0C30;
+        public const int GL_RGBA_MODE = 0x0C31;
+        public const int GL_DOUBLEBUFFER = 0x0C32;
+        public const int GL_STEREO = 0x0C33;
+        public const int GL_RENDER_MODE = 0x0C40;
+        public const int GL_PERSPECTIVE_CORRECTION_HINT = 0x0C50;
+        public const int GL_POINT_SMOOTH_HINT = 0x0C51;
+        public const int GL_LINE_SMOOTH_HINT = 0x0C52;
+        public const int GL_POLYGON_SMOOTH_HINT = 0x0C53;
+        public const int GL_FOG_HINT = 0x0C54;
+        public const int GL_TEXTURE_GEN_S = 0x0C60;
+        public const int GL_TEXTURE_GEN_T = 0x0C61;
+        public const int GL_TEXTURE_GEN_R = 0x0C62;
+        public const int GL_TEXTURE_GEN_Q = 0x0C63;
+        public const int GL_PIXEL_MAP_I_TO_I = 0x0C70;
+        public const int GL_PIXEL_MAP_S_TO_S = 0x0C71;
+        public const int GL_PIXEL_MAP_I_TO_R = 0x0C72;
+        public const int GL_PIXEL_MAP_I_TO_G = 0x0C73;
+        public const int GL_PIXEL_MAP_I_TO_B = 0x0C74;
+        public const int GL_PIXEL_MAP_I_TO_A = 0x0C75;
+        public const int GL_PIXEL_MAP_R_TO_R = 0x0C76;
+        public const int GL_PIXEL_MAP_G_TO_G = 0x0C77;
+        public const int GL_PIXEL_MAP_B_TO_B = 0x0C78;
+        public const int GL_PIXEL_MAP_A_TO_A = 0x0C79;
+        public const int GL_PIXEL_MAP_I_TO_I_SIZE = 0x0CB0;
+        public const int GL_PIXEL_MAP_S_TO_S_SIZE = 0x0CB1;
+        public const int GL_PIXEL_MAP_I_TO_R_SIZE = 0x0CB2;
+        public const int GL_PIXEL_MAP_I_TO_G_SIZE = 0x0CB3;
+        public const int GL_PIXEL_MAP_I_TO_B_SIZE = 0x0CB4;
+        public const int GL_PIXEL_MAP_I_TO_A_SIZE = 0x0CB5;
+        public const int GL_PIXEL_MAP_R_TO_R_SIZE = 0x0CB6;
+        public const int GL_PIXEL_MAP_G_TO_G_SIZE = 0x0CB7;
+        public const int GL_PIXEL_MAP_B_TO_B_SIZE = 0x0CB8;
+        public const int GL_PIXEL_MAP_A_TO_A_SIZE = 0x0CB9;
+        public const int GL_UNPACK_SWAP_BYTES = 0x0CF0;
+        public const int GL_UNPACK_LSB_FIRST = 0x0CF1;
+        public const int GL_UNPACK_ROW_LENGTH = 0x0CF2;
+        public const int GL_UNPACK_SKIP_ROWS = 0x0CF3;
+        public const int GL_UNPACK_SKIP_PIXELS = 0x0CF4;
+        public const int GL_UNPACK_ALIGNMENT = 0x0CF5;
+        public const int GL_PACK_SWAP_BYTES = 0x0D00;
+        public const int GL_PACK_LSB_FIRST = 0x0D01;
+        public const int GL_PACK_ROW_LENGTH = 0x0D02;
+        public const int GL_PACK_SKIP_ROWS = 0x0D03;
+        public const int GL_PACK_SKIP_PIXELS = 0x0D04;
+        public const int GL_PACK_ALIGNMENT = 0x0D05;
+        public const int GL_MAP_COLOR = 0x0D10;
+        public const int GL_MAP_STENCIL = 0x0D11;
+        public const int GL_INDEX_SHIFT = 0x0D12;
+        public const int GL_INDEX_OFFSET = 0x0D13;
+        public const int GL_RED_SCALE = 0x0D14;
+        public const int GL_RED_BIAS = 0x0D15;
+        public const int GL_ZOOM_X = 0x0D16;
+        public const int GL_ZOOM_Y = 0x0D17;
+        public const int GL_GREEN_SCALE = 0x0D18;
+        public const int GL_GREEN_BIAS = 0x0D19;
+        public const int GL_BLUE_SCALE = 0x0D1A;
+        public const int GL_BLUE_BIAS = 0x0D1B;
+        public const int GL_ALPHA_SCALE = 0x0D1C;
+        public const int GL_ALPHA_BIAS = 0x0D1D;
+        public const int GL_DEPTH_SCALE = 0x0D1E;
+        public const int GL_DEPTH_BIAS = 0x0D1F;
+        public const int GL_MAX_EVAL_ORDER = 0x0D30;
+        public const int GL_MAX_LIGHTS = 0x0D31;
+        public const int GL_MAX_CLIP_PLANES = 0x0D32;
+        public const int GL_MAX_TEXTURE_SIZE = 0x0D33;
+        public const int GL_MAX_PIXEL_MAP_TABLE = 0x0D34;
+        public const int GL_MAX_ATTRIB_STACK_DEPTH = 0x0D35;
+        public const int GL_MAX_MODELVIEW_STACK_DEPTH = 0x0D36;
+        public const int GL_MAX_NAME_STACK_DEPTH = 0x0D37;
+        public const int GL_MAX_PROJECTION_STACK_DEPTH = 0x0D38;
+        public const int GL_MAX_TEXTURE_STACK_DEPTH = 0x0D39;
+        public const int GL_MAX_VIEWPORT_DIMS = 0x0D3A;
+        public const int GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = 0x0D3B;
+        public const int GL_SUBPIXEL_BITS = 0x0D50;
+        public const int GL_INDEX_BITS = 0x0D51;
+        public const int GL_RED_BITS = 0x0D52;
+        public const int GL_GREEN_BITS = 0x0D53;
+        public const int GL_BLUE_BITS = 0x0D54;
+        public const int GL_ALPHA_BITS = 0x0D55;
+        public const int GL_DEPTH_BITS = 0x0D56;
+        public const int GL_STENCIL_BITS = 0x0D57;
+        public const int GL_ACCUM_RED_BITS = 0x0D58;
+        public const int GL_ACCUM_GREEN_BITS = 0x0D59;
+        public const int GL_ACCUM_BLUE_BITS = 0x0D5A;
+        public const int GL_ACCUM_ALPHA_BITS = 0x0D5B;
+        public const int GL_NAME_STACK_DEPTH = 0x0D70;
+        public const int GL_AUTO_NORMAL = 0x0D80;
+        public const int GL_MAP1_COLOR_4 = 0x0D90;
+        public const int GL_MAP1_INDEX = 0x0D91;
+        public const int GL_MAP1_NORMAL = 0x0D92;
+        public const int GL_MAP1_TEXTURE_COORD_1 = 0x0D93;
+        public const int GL_MAP1_TEXTURE_COORD_2 = 0x0D94;
+        public const int GL_MAP1_TEXTURE_COORD_3 = 0x0D95;
+        public const int GL_MAP1_TEXTURE_COORD_4 = 0x0D96;
+        public const int GL_MAP1_VERTEX_3 = 0x0D97;
+        public const int GL_MAP1_VERTEX_4 = 0x0D98;
+        public const int GL_MAP2_COLOR_4 = 0x0DB0;
+        public const int GL_MAP2_INDEX = 0x0DB1;
+        public const int GL_MAP2_NORMAL = 0x0DB2;
+        public const int GL_MAP2_TEXTURE_COORD_1 = 0x0DB3;
+        public const int GL_MAP2_TEXTURE_COORD_2 = 0x0DB4;
+        public const int GL_MAP2_TEXTURE_COORD_3 = 0x0DB5;
+        public const int GL_MAP2_TEXTURE_COORD_4 = 0x0DB6;
+        public const int GL_MAP2_VERTEX_3 = 0x0DB7;
+        public const int GL_MAP2_VERTEX_4 = 0x0DB8;
+        public const int GL_MAP1_GRID_DOMAIN = 0x0DD0;
+        public const int GL_MAP1_GRID_SEGMENTS = 0x0DD1;
+        public const int GL_MAP2_GRID_DOMAIN = 0x0DD2;
+        public const int GL_MAP2_GRID_SEGMENTS = 0x0DD3;
+        public const int GL_TEXTURE_1D = 0x0DE0;
+        public const int GL_TEXTURE_2D = 0x0DE1;
+        public const int GL_FEEDBACK_BUFFER_POINTER = 0x0DF0;
+        public const int GL_FEEDBACK_BUFFER_SIZE = 0x0DF1;
+        public const int GL_FEEDBACK_BUFFER_TYPE = 0x0DF2;
+        public const int GL_SELECTION_BUFFER_POINTER = 0x0DF3;
+        public const int GL_SELECTION_BUFFER_SIZE = 0x0DF4;
+        //GetTextureParameter
+        //GL_TEXTURE_MAG_FILTER
+        //GL_TEXTURE_MIN_FILTER
+        //GL_TEXTURE_WRAP_S
+        //GL_TEXTURE_WRAP_T
+        public const int GL_TEXTURE_WIDTH = 0x1000;
+        public const int GL_TEXTURE_HEIGHT = 0x1001;
+        public const int GL_TEXTURE_INTERNAL_FORMAT = 0x1003;
+        public const int GL_TEXTURE_BORDER_COLOR = 0x1004;
+        public const int GL_TEXTURE_BORDER = 0x1005;
+	        //GL_TEXTURE_RED_SIZE 
+	        //GL_TEXTURE_GREEN_SIZE 
+	        //GL_TEXTURE_BLUE_SIZE 
+	        //GL_TEXTURE_ALPHA_SIZE 
+	        //GL_TEXTURE_LUMINANCE_SIZE 
+	        //GL_TEXTURE_INTENSITY_SIZE 
+	        //GL_TEXTURE_PRIORITY 
+	        //GL_TEXTURE_RESIDENT 
+        
+        //HintMode
+        public const int GL_DONT_CARE = 0x1100;
+        public const int GL_FASTEST = 0x1101;
+        public const int GL_NICEST = 0x1102;
+        
+        //LightName
+        public const int GL_LIGHT0 = 0x4000;
+        public const int GL_LIGHT1 = 0x4001;
+        public const int GL_LIGHT2 = 0x4002;
+        public const int GL_LIGHT3 = 0x4003;
+        public const int GL_LIGHT4 = 0x4004;
+        public const int GL_LIGHT5 = 0x4005;
+        public const int GL_LIGHT6 = 0x4006;
+        public const int GL_LIGHT7 = 0x4007;
+
+        //LightParameter 
+        public const int GL_AMBIENT = 0x1200;
+        public const int GL_DIFFUSE = 0x1201;
+        public const int GL_SPECULAR = 0x1202;
+        public const int GL_POSITION = 0x1203;
+        public const int GL_SPOT_DIRECTION = 0x1204;
+        public const int GL_SPOT_EXPONENT = 0x1205;
+        public const int GL_SPOT_CUTOFF = 0x1206;
+        public const int GL_CONSTANT_ATTENUATION = 0x1207;
+        public const int GL_LINEAR_ATTENUATION = 0x1208;
+        public const int GL_QUADRATIC_ATTENUATION = 0x1209;
+        
+        //ListMode 
+        public const int GL_COMPILE = 0x1300;
+        public const int GL_COMPILE_AND_EXECUTE = 0x1301;
+
+        // Transformation Methods
+        public static void glMatrixMode(int mode) { }
+        public static void glLoadIdentity() { }
+        public static void glPushMatrix() { }
+        public static void glPopMatrix() { }
+        public static void glTranslatef(float x, float y, float z) { }
+        public static void glRotatef(float angle, float x, float y, float z) { }
+        public static void glScalef(float x, float y, float z) { }
+        public static void glLoadMatrixf(float[] matrix) { }
+        public static void glMultMatrixf(float[] matrix) { }
+
+        // Rendering
+        public static void glBegin(int mode) { }
+        public static void glEnd() { }
+        public static void glVertex2f(float x, float y) { }
+        public static void glVertex3f(float x, float y, float z) { }
+        public static void glColor3f(float r, float g, float b) { }
+        public static void glColor4f(float r, float g, float b, float a) { }
+        public static void glTexCoord2f(float u, float v) { }
+        public static void glNormal3f(float x, float y, float z) { }
+
+        // State Control
+        public static void glEnable(int cap) { }
+        public static void glDisable(int cap) { }
+
+        // Viewport / Projection
+        public static void glViewport(int x, int y, int width, int height) { }
+        public static void glOrtho(double left, double right, double bottom, double top, double zNear, double zFar) { }
+        public static void glFrustum(double left, double right, double bottom, double top, double zNear, double zFar) { }
+
+        // Buffers
+        public static void glClear(int mask) { }
+        public static void glClearColor(float r, float g, float b, float a) { }
+        public static void glClearDepth(double depth) { }
+
+        // Depth Testing
+        public static void glDepthFunc(int func) { }
+
+        // Blending
+        public static void glBlendFunc(int sfactor, int dfactor) { }
+
+        // Flush
+        public static void glFlush() { }
+        public static void glFinish() { }
+    }
+}
