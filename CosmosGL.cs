@@ -4,7 +4,7 @@ using System;
 using System.Drawing;
 using System.Numerics; // For Vector3 and Matrix4x4
 
-namespace Unity.Engine.CosmosGL
+namespace CosmosGL.CGL
 {
     public static class CosmosGL
     {
