@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="CosmosGL.png" style="border-radius=15px;">
-    <source media="(prefers-color-scheme: light)" srcset="CosmosGL.png" style="border-radius=15px;">
-    <img width=60% alt="Shows a black logo in light color mode and a white one in dark color mode." src="CosmosGL.png" style="border-radius=15px;">
+    <source media="(prefers-color-scheme: dark)" srcset="CosmosGL1.png" style="border-radius=15px;">
+    <source media="(prefers-color-scheme: light)" srcset="CosmosGL1.png" style="border-radius=15px;">
+    <img width=60% alt="Shows a black logo in light color mode and a white one in dark color mode." src="CosmosGL1.png" style="border-radius=15px;">
   </picture>
 </p> 
 
